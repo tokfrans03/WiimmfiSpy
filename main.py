@@ -83,9 +83,10 @@ def add_room(url: string):
 
 @app.delete("/room")
 def remove_room():
-    for i, room in enumerate(reversed(rooms)):
-        room.stop = True
-        rooms.pop(i)
+    global rooms
+    for i, room in enumerate(rooms):
+        rooms[i].stop = True
+    rooms = []
     return f"removed all rooms"
 
 
