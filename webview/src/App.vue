@@ -284,8 +284,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    timeString2ms(a: any, b: number) {
+    timeString2ms(a: any) {
       // time(HH:MM:SS.mss) // optimized
+      let b: number;
       return (
         (a = a.split(".")), // optimized
         (b = a[1] * 1 || 0), // optimized
@@ -299,8 +300,8 @@ export default Vue.extend({
             1e3
       ); // optimized
     },
-    customSort: function (items, index, isDesc) {
-      items.sort((a, b): any => {
+    customSort: function (items: Player[], index: any, isDesc: any[]) {
+      items.sort((a: any, b: any): any => {
         if (index[0] === "time") {
           if (isDesc[0]) {
             return this.compareTime(b[index], a[index]);
@@ -331,7 +332,7 @@ export default Vue.extend({
       });
       return items;
     },
-    compareTime(a, b) {
+    compareTime(a: string, b: string) {
       if (a == "—") return 1;
       if (b == "—") return -1;
 
@@ -483,9 +484,13 @@ export default Vue.extend({
     },
     setRoom(room: Room) {
       this.room = room;
+      if (!this.room.players) return
       if (this.room.players.some((player) => player.time != "—")) {
         // someone finished
         let activePlayers = this.room.players.filter(player => player.combo !== "—")
+
+        if (!activePlayers) return
+
         activePlayers.sort(this.compareTimePlayers)
         activePlayers.forEach((player: Player, i: number) => {
           let pplAhead  = activePlayers.slice(0, i)
